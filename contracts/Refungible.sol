@@ -42,20 +42,27 @@ contract Refungible is ERC20{
         //you need to check to see if the sale has ended before you buy
         require (nftSaleEnd > 0, "The sale hasn't started yet");
         require(block.timestamp <= nftSaleEnd, "The sale has finished");
+        //check if the total supply plus the amount they wants to buy is left than the total shares
         require(totalSupply() + shareAmount <= nftShareSupply, "Not enough shares left to buy");
         uint daiAmount = shareAmount * nftSharePrice;
         dai.transferFrom(msg.sender, address(this), daiAmount);
+        //mint new tokens to represent his share of the NFT
         _mint(msg.sender, shareAmount);
     }
-
+    //function called by the admin to withdraw the dai and the remaining shares
     function withdrawProfits() external {
         require (msg.sender == NFTadmin, "Only the admin can do this");
         require (block.timestamp > nftSaleEnd, "Sale is not done yet");
+        //point to the dai smart contract and figure out the balance of the admin
         uint daiBalance = dai.balanceOf(address(this));
         if (daiBalance > 0) {
             dai.transfer(NFTadmin, daiBalance);
         }
-        
+        //send the balance of the NFTshares that arent sold to the investors 
+        uint unsoldShareBalance = nftShareSupply - totalSupply();
+        if (unsoldShareBalance > 0){
+            _mint(NFTadmin, unsoldShareBalance);
+        }
     }
 
 }
