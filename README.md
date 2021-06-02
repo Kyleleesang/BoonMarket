@@ -6,3 +6,5 @@ of having to buy a whole NFT you can have some ownership in it. The NFT is sent 
 tokens allows users to buy into the NFT. The NFT admin contract will later withdraw profits to the NFT buyer for his reward.
 
 Front end is not yet implemented for this contract, development will continue and any open source contributions are very much welcome
+
+also the DAI contract is just a placeholder its not implemented yet but will be in the next few days
